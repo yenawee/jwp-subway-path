@@ -6,16 +6,14 @@ import org.junit.jupiter.api.Test;
 import subway.domain.Fare;
 import subway.domain.Sections;
 import subway.domain.Subway;
-import subway.service.path.DistanceFareCalculator;
-import subway.service.path.FareCalculator;
-import subway.service.path.ShortestPath;
-import subway.service.path.SubwayGraph;
+import subway.service.path.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static subway.fixture.PassengerFixture.*;
 import static subway.fixture.SectionFixture.*;
 import static subway.fixture.SectionsFixture.SECTIONS;
 import static subway.fixture.StationFixture.*;
@@ -43,14 +41,14 @@ class SubwayGraphTest {
         subway = Subway.from(SECTIONS);
         subwayGraph = SubwayGraph.from(subway);
         fareCalculator = new DistanceFareCalculator();
-
+        fareCalculator.setNextFareCalculator(new LineFareCalculator()).setNextFareCalculator(new AgeFareCalculator());
     }
 
     @DisplayName("한 노선에서 최단 경로를 구한다 (이촌 - 응봉)")
     @Test
     void getShortestPathInOneLine() {
         ShortestPath shortestPath = subwayGraph.getDijkstraShortestPath(STATION_2, STATION_6);
-        Fare fare = fareCalculator.calculate(shortestPath);
+        Fare fare = fareCalculator.calculate(shortestPath, ADULT, new Fare(0));
 
         assertThat(shortestPath.getPath()).isEqualTo(new ArrayList<>(List.of(SECTION_2, SECTION_3, SECTION_4, SECTION_5)));
         assertThat(shortestPath.getDistance().getDistance()).isEqualTo(35);
@@ -65,7 +63,7 @@ class SubwayGraphTest {
     @Test
     void getShortestPathInMultiLines() {
         ShortestPath shortestPath = subwayGraph.getDijkstraShortestPath(STATION_2, STATION_19);
-        Fare fare = fareCalculator.calculate(shortestPath);
+        Fare fare = fareCalculator.calculate(shortestPath, ADULT, new Fare(0));
 
         assertThat(shortestPath.getPath()).isEqualTo(new ArrayList<>(
                 List.of(SECTION_2, SECTION_3, SECTION_4, SECTION_5, SECTION_6, SECTION_19, SECTION_18, SECTION_17, SECTION_16)));
@@ -83,5 +81,47 @@ class SubwayGraphTest {
         assertThatThrownBy(() -> subwayGraph.getDijkstraShortestPath(STATION_1, STATION_8))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("최단 경로를 찾을 수 없습니다");
+    }
+
+    @DisplayName("어린이 일때 요금 정책이 적용되었는지 확인한다(이촌 - 응봉)")
+    @Test
+    void fareCalculate_Child() {
+        ShortestPath shortestPath = subwayGraph.getDijkstraShortestPath(STATION_2, STATION_6);
+        Fare fare = fareCalculator.calculate(shortestPath, CHILD, new Fare(0));
+
+        assertThat(shortestPath.getPath()).isEqualTo(new ArrayList<>(List.of(SECTION_2, SECTION_3, SECTION_4, SECTION_5)));
+        assertThat(shortestPath.getDistance().getDistance()).isEqualTo(35);
+        assertThat(fare.getFare()).isEqualTo(700);
+    }
+
+    @DisplayName("청소년 일때 요금 정책이 적용되었는지 확인한다(이촌 - 응봉)")
+    @Test
+    void fareCalculate_Teenager() {
+        ShortestPath shortestPath = subwayGraph.getDijkstraShortestPath(STATION_2, STATION_6);
+        Fare fare = fareCalculator.calculate(shortestPath, TEENAGER, new Fare(0));
+
+        assertThat(shortestPath.getPath()).isEqualTo(new ArrayList<>(List.of(SECTION_2, SECTION_3, SECTION_4, SECTION_5)));
+        assertThat(shortestPath.getDistance().getDistance()).isEqualTo(35);
+        assertThat(fare.getFare()).isEqualTo(1120);
+    }
+
+    @DisplayName("노선별 요금이 있을 때 추가 노선별 요금이 적용되었는지 확인한다 (경의중앙 -> 1호선 -> 1호선)")
+    @Test
+    void fareCalculate_LineFare() {
+        ShortestPath shortestPath = subwayGraph.getDijkstraShortestPath(STATION_2, STATION_21);
+        Fare fare = fareCalculator.calculate(shortestPath, ADULT, new Fare(0));
+
+        assertThat(shortestPath.getDistance().getDistance()).isEqualTo(20);
+        assertThat(fare.getFare()).isEqualTo(2450);
+    }
+
+    @DisplayName("노선별 요금과 연령 할인 정책이 둘 다 적용되는지 확인한다")
+    @Test
+    void fareCalculate_AllPolicy() {
+        ShortestPath shortestPath = subwayGraph.getDijkstraShortestPath(STATION_2, STATION_21);
+        Fare fare = fareCalculator.calculate(shortestPath, CHILD, new Fare(0));
+
+        assertThat(shortestPath.getDistance().getDistance()).isEqualTo(20);
+        assertThat(fare.getFare()).isEqualTo(1050);
     }
 }

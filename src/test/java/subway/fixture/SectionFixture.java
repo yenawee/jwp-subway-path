@@ -26,4 +26,6 @@ public class SectionFixture {
     public static final Section SECTION_17 = new Section(LINE_3, STATION_18, STATION_17, new Distance(9));
     public static final Section SECTION_18 = new Section(LINE_3, STATION_17, STATION_16, new Distance(2));
     public static final Section SECTION_19 = new Section(LINE_3, STATION_16, STATION_7, new Distance(10));
+    public static final Section SECTION_20 = new Section(LINE_5, STATION_1, STATION_20, new Distance(10));
+    public static final Section SECTION_21 = new Section(LINE_4, STATION_20, STATION_21, new Distance(5));
 }

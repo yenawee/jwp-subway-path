@@ -22,5 +22,7 @@ public class StationFixture {
     public static final Station STATION_17 = new Station("성수");
     public static final Station STATION_18 = new Station("건대입구");
     public static final Station STATION_19 = new Station("잠실");
+    public static final Station STATION_20 = new Station("노량진");
+    public static final Station STATION_21 = new Station("노들");
 
 }

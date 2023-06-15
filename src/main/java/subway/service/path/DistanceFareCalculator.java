@@ -3,9 +3,10 @@ package subway.service.path;
 import org.springframework.stereotype.Component;
 import subway.domain.Distance;
 import subway.domain.Fare;
+import subway.domain.Passenger;
 
 @Component
-public class DistanceFareCalculator implements FareCalculator {
+public class DistanceFareCalculator extends FareCalculator {
     private static final Distance BASE_DISTANCE = new Distance(10);
     private static final Distance ADDITIONAL_FARE_DISTANCE = new Distance(50);
     private static final Distance FIRST_ADDITIONAL_DISTANCE_INTERVAL = new Distance(5);
@@ -14,7 +15,7 @@ public class DistanceFareCalculator implements FareCalculator {
     private static final int BASIC_FARE = 1_250;
 
     @Override
-    public Fare calculate(ShortestPath shortestPath) {
+    public Fare internalCalculate(ShortestPath shortestPath, Passenger passenger, Fare fare) {
         Distance distance = shortestPath.getDistance();
         int additionalFare = 0;
         if (distance.compareTo(BASE_DISTANCE) > 0 && distance.compareTo(ADDITIONAL_FARE_DISTANCE) != 1) {
