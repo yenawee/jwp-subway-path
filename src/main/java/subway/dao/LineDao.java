@@ -22,7 +22,8 @@ public class LineDao {
             new LineEntity(
                     rs.getLong("id"),
                     rs.getString("name"),
-                    rs.getString("color")
+                    rs.getString("color"),
+                    rs.getLong("base_fee")
             );
 
     public LineDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
@@ -37,18 +38,19 @@ public class LineDao {
         params.put("id", line.getId());
         params.put("name", line.getName());
         params.put("color", line.getColor());
+        params.put("base_fee", line.getBaseFee());
 
         Long lineId = insertAction.executeAndReturnKey(params).longValue();
-        return new LineEntity(lineId, line.getName(), line.getColor());
+        return new LineEntity(lineId, line.getName(), line.getColor(), line.getBaseFee());
     }
 
     public List<LineEntity> findAll() {
-        String sql = "select id, name, color from LINE";
+        String sql = "select id, name, color, base_fee from LINE";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     public Optional<LineEntity> findById(Long id) {
-        String sql = "select id, name, color from LINE WHERE id = ?";
+        String sql = "select id, name, color, base_fee from LINE WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (EmptyResultDataAccessException e) {

@@ -48,10 +48,11 @@ class IntegrationTest {
                 statusCode(HttpStatus.CREATED.value());
     }
 
-    protected void createLine(String name, String color) {
-        Map<String, String> params = new HashMap<>();
+    protected void createLine(String name, String color, Long baseFee) {
+        Map<String, Object> params = new HashMap<>();
         params.put("name", name);
         params.put("color", color);
+        params.put("baseFee", baseFee);
 
         given().
                 body(params).
@@ -122,10 +123,10 @@ class IntegrationTest {
                 statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    protected PathResponse getShortestPath(Long departureStationId, Long arrivalStationId) {
+    protected PathResponse getShortestPath(Long departureStationId, Long arrivalStationId, Long age) {
         return given().
                 when().
-                get("/path?departure={departure}&arrival={arrival}", departureStationId, arrivalStationId).
+                get("/path?departure={departure}&arrival={arrival}&age={age}", departureStationId, arrivalStationId, age).
                 then().
                 log().all().
                 statusCode(HttpStatus.OK.value()).

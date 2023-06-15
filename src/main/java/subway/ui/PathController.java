@@ -19,8 +19,8 @@ public class PathController {
 
     @GetMapping
     public ResponseEntity<PathResponse> getShortestPath(@RequestParam("departure") Long departureStationId,
-                                                        @RequestParam("arrival") Long arrivalStationId) {
-        PathResponse pathResponse = pathService.getShortestPath(departureStationId, arrivalStationId);
+                                                        @RequestParam("arrival") Long arrivalStationId, @RequestParam("age") Long age) {
+        PathResponse pathResponse = pathService.getShortestPath(departureStationId, arrivalStationId, age);
         return ResponseEntity.ok().body(pathResponse);
     }
 }

@@ -20,7 +20,7 @@ public class SelectionRemovalIntegrationTest extends IntegrationTest {
         createStation("이촌");
         createStation("용산");
 
-        createLine("경의중앙선", "청록");
+        createLine("경의중앙선", "청록", 0L);
 
         List<LineResponse> lines = getLines();
         LineResponse line = getLine(lines.get(0).getId());
@@ -48,7 +48,7 @@ public class SelectionRemovalIntegrationTest extends IntegrationTest {
         createStation("용산");
         createStation("서빙고");
 
-        createLine("경의중앙선", "청록");
+        createLine("경의중앙선", "청록", 0L);
 
         List<LineResponse> lines = getLines();
         LineResponse line = getLine(lines.get(0).getId());
@@ -75,7 +75,7 @@ public class SelectionRemovalIntegrationTest extends IntegrationTest {
         createStation("용산");
         createStation("서빙고");
 
-        createLine("경의중앙선", "청록");
+        createLine("경의중앙선", "청록", 0L);
 
         List<LineResponse> lines = getLines();
         LineResponse line = getLine(lines.get(0).getId());
@@ -102,7 +102,7 @@ public class SelectionRemovalIntegrationTest extends IntegrationTest {
         createStation("서빙고");
         createStation("한남");
 
-        createLine("경의중앙선", "청록");
+        createLine("경의중앙선", "청록", 0L);
 
         List<LineResponse> lines = getLines();
         LineResponse line = getLine(lines.get(0).getId());

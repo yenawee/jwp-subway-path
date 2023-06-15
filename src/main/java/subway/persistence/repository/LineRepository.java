@@ -19,7 +19,7 @@ public class LineRepository {
     }
 
     public LineResponse saveLine(LineRequest request) {
-        LineEntity persistLine = lineDao.insert(new LineEntity(request.getName(), request.getColor()));
+        LineEntity persistLine = lineDao.insert(new LineEntity(request.getName(), request.getColor(), request.getBaseFee()));
         return LineResponse.of(persistLine);
     }
 
@@ -48,7 +48,7 @@ public class LineRepository {
     }
 
     public void updateLine(Long id, LineRequest lineUpdateRequest) {
-        lineDao.update(new LineEntity(id, lineUpdateRequest.getName(), lineUpdateRequest.getColor()));
+        lineDao.update(new LineEntity(id, lineUpdateRequest.getName(), lineUpdateRequest.getColor(), lineUpdateRequest.getBaseFee()));
     }
 
     public void deleteLineById(Long id) {
