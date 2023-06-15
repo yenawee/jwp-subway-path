@@ -4,7 +4,8 @@ Content-Type: application/json
 
 {
   "name" : "경의중앙선",
-  "color" : "청록"
+  "color" : "청록",
+  "baseFee" : "0"
 }
 
 ### 노선 등록(2)
@@ -13,7 +14,8 @@ Content-Type: application/json
 
 {
 "name" : "2호선",
-"color" : "초록"
+"color" : "초록",
+  "baseFee" : "0"
 }
 
 ### 전체 노선 조회
