@@ -2,7 +2,7 @@
 
 ### 프로그램 실행방법
 
-/docker 경로에서 아래 명령어를 입력해주세요
+아래 명령어를 입력해주세요
 
 ```
 docker-compose -p subway up -d
